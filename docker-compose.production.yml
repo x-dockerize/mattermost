@@ -1,0 +1,52 @@
+version: "3.9"
+
+services:
+  mattermost:
+    image: mattermost/mattermost-team-edition:latest
+    container_name: mattermost
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      TZ: ${TZ}
+
+      MM_SQLSETTINGS_DRIVERNAME: mysql
+      MM_SQLSETTINGS_DATASOURCE: >
+        ${DATABASE_USER:-mattermost}:${DATABASE_PASSWORD}@tcp(${DATABASE_HOST}:${MM_DB_PORT})/${DATABASE_NAME:-chat}?charset=utf8mb4,utf8&readTimeout=30s&writeTimeout=30s
+      MM_SERVICESETTINGS_SITEURL: https://${SERVER_HOSTNAME}
+
+      # SMTP
+      MM_EMAILSETTINGS_SMTPSERVER: ${SMTP_HOST}
+      MM_EMAILSETTINGS_SMTPPORT: ${SMTP_PORT:-587}
+      MM_EMAILSETTINGS_SMTPUSERNAME: ${SMTP_USERNAME}
+      MM_EMAILSETTINGS_SMTPPASSWORD: ${SMTP_PASSWORD}
+      MM_EMAILSETTINGS_CONNECTIONSECURITY: STARTTLS
+      MM_EMAILSETTINGS_SKIPSERVERCERTIFICATEVERIFICATION: false
+
+      MM_EMAILSETTINGS_FEEDBACKNAME: ${EMAIL_FROM_NAME}
+      MM_EMAILSETTINGS_FEEDBACKEMAIL: ${EMAIL_FROM}
+      MM_EMAILSETTINGS_REPLYTOADDRESS: ${EMAIL_FROM}
+    volumes:
+      - ./.docker/mattermost/data:/mattermost/data
+      - ./.docker/mattermost/logs:/mattermost/logs
+      - ./.docker/mattermost/config:/mattermost/config
+      - ./.docker/mattermost/plugins:/mattermost/plugins
+    networks:
+      - traefik-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik-network"
+
+      # Routers
+      - "traefik.http.routers.mattermost.rule=Host(`${SERVER_HOSTNAME}`)"
+      - "traefik.http.routers.mattermost.entrypoints=websecure"
+      - "traefik.http.routers.mattermost.tls.certresolver=le-cloudflare"
+      - "traefik.http.routers.mattermost.service=mattermost"
+
+      # Services
+      - "traefik.http.services.mattermost.loadbalancer.server.port=8065"
+
+
+networks:
+  traefik-network:
+    external: true
