@@ -8,8 +8,8 @@ services:
     environment:
       TZ: ${TZ}
 
-      MM_SQLSETTINGS_DRIVERNAME: mysql
-      MM_SQLSETTINGS_DATASOURCE: "${DATABASE_USER:-mattermost}:${DATABASE_PASSWORD}@tcp(${DATABASE_HOST}:${DATABASE_PORT:-3306})/${DATABASE_NAME:-chat}?charset=utf8mb4,utf8&readTimeout=30s&writeTimeout=30s"
+      MM_SQLSETTINGS_DRIVERNAME: postgres
+      MM_SQLSETTINGS_DATASOURCE: "postgres://${DATABASE_USER:-mattermost}:${DATABASE_PASSWORD}@${DATABASE_HOST}:${DATABASE_PORT:-5432}/${DATABASE_NAME:-mattermost}?sslmode=disable&connect_timeout=10"
       MM_SERVICESETTINGS_SITEURL: https://${SERVER_HOSTNAME}
 
       # SMTP
@@ -30,6 +30,7 @@ services:
       - ./.docker/mattermost/plugins:/mattermost/plugins
     networks:
       - traefik-network
+      - postgres-network
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=traefik-network"
@@ -46,4 +47,6 @@ services:
 
 networks:
   traefik-network:
+    external: true
+  postgres-network:
     external: true
