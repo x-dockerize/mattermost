@@ -9,7 +9,7 @@ services:
 
       MM_SQLSETTINGS_DRIVERNAME: postgres
       MM_SQLSETTINGS_DATASOURCE: "postgres://${DATABASE_USER:-mattermost}:${DATABASE_PASSWORD}@${DATABASE_HOST}:${DATABASE_PORT:-5432}/${DATABASE_NAME:-mattermost}?sslmode=disable&connect_timeout=10"
-      MM_SERVICESETTINGS_SITEURL: https://${SERVER_HOSTNAME}
+      MM_SERVICESETTINGS_SITEURL: https://${MATTERMOST_SERVER_HOSTNAME:?required}
 
       # SMTP
       MM_EMAILSETTINGS_SMTPSERVER: ${SMTP_HOST}
@@ -35,7 +35,7 @@ services:
       - "traefik.docker.network=traefik-network"
 
       # Routers
-      - "traefik.http.routers.mattermost.rule=Host(`${SERVER_HOSTNAME}`)"
+      - "traefik.http.routers.mattermost.rule=Host(`${MATTERMOST_SERVER_HOSTNAME:?required}`)"
       - "traefik.http.routers.mattermost.entrypoints=websecure"
       - "traefik.http.routers.mattermost.tls.certresolver=le-cloudflare"
       - "traefik.http.routers.mattermost.service=mattermost"
