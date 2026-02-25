@@ -31,17 +31,17 @@ services:
       - traefik-network
       - postgres-network
     labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=traefik-network"
+      - traefik.enable=true
+      - traefik.docker.network=traefik-network
 
       # Routers
-      - "traefik.http.routers.mattermost.rule=Host(`${MATTERMOST_SERVER_HOSTNAME:?required}`)"
-      - "traefik.http.routers.mattermost.entrypoints=websecure"
-      - "traefik.http.routers.mattermost.tls.certresolver=le-cloudflare"
-      - "traefik.http.routers.mattermost.service=mattermost"
+      - traefik.http.routers.mattermost.rule=Host(`${MATTERMOST_SERVER_HOSTNAME:?required}`)
+      - traefik.http.routers.mattermost.entrypoints=websecure
+      - traefik.http.routers.mattermost.tls.certresolver=le-cloudflare
+      - traefik.http.routers.mattermost.service=mattermost
 
       # Services
-      - "traefik.http.services.mattermost.loadbalancer.server.port=8065"
+      - traefik.http.services.mattermost.loadbalancer.server.port=8065
 
 
 networks:
