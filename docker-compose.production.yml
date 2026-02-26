@@ -40,6 +40,13 @@ services:
       - traefik.http.routers.mattermost.tls.certresolver=le-cloudflare
       - traefik.http.routers.mattermost.service=mattermost
 
+      # Admin Console Router - restricted by IP
+      - traefik.http.routers.mattermost-admin.rule=Host(`${MATTERMOST_SERVER_HOSTNAME:?required}`) && PathPrefix(`/admin_console`)
+      - traefik.http.routers.mattermost-admin.entrypoints=websecure
+      - traefik.http.routers.mattermost-admin.tls.certresolver=le-cloudflare
+      - traefik.http.routers.mattermost-admin.middlewares=trusted@file
+      - traefik.http.routers.mattermost-admin.service=mattermost
+
       # Services
       - traefik.http.services.mattermost.loadbalancer.server.port=8065
       - traefik.http.services.mattermost.loadbalancer.responseforwarding.flushinterval=100ms
