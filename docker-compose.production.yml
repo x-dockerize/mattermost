@@ -5,8 +5,6 @@ services:
     restart: unless-stopped
     env_file: .env
     environment:
-      TZ: ${TZ}
-
       MM_SQLSETTINGS_DRIVERNAME: postgres
       MM_SQLSETTINGS_DATASOURCE: "postgres://${DATABASE_USER:-mattermost}:${DATABASE_PASSWORD}@${DATABASE_HOST}:${DATABASE_PORT:-5432}/${DATABASE_NAME:-mattermost}?sslmode=disable&connect_timeout=10"
       MM_SERVICESETTINGS_SITEURL: https://${MATTERMOST_SERVER_HOSTNAME:?required}
