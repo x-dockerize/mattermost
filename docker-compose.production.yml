@@ -42,6 +42,7 @@ services:
 
       # Services
       - traefik.http.services.mattermost.loadbalancer.server.port=8065
+      - traefik.http.services.mattermost.loadbalancer.responseforwarding.flushinterval=100ms
 
 
 networks:
