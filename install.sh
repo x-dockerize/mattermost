@@ -64,20 +64,29 @@ read -rsp "SMTP_PASSWORD: " SMTP_PASSWORD
 echo
 read -rp "EMAIL_FROM_NAME (örn: Mattermost): " EMAIL_FROM_NAME
 
+echo
+echo "--- Veritabanı ---"
+read -rp "DATABASE_HOST (boş bırakılırsa: postgres): " INPUT_DB_HOST
+DATABASE_HOST="${INPUT_DB_HOST:-postgres}"
+read -rp "DATABASE_USER (boş bırakılırsa: mattermost): " INPUT_DB_USER
+DATABASE_USER="${INPUT_DB_USER:-mattermost}"
+read -rsp "DATABASE_PASSWORD: " DATABASE_PASSWORD
+echo
+
 # --------------------------------------------------
 # .env Güncelle
 # --------------------------------------------------
 set_env MATTERMOST_SERVER_HOSTNAME "$MATTERMOST_SERVER_HOSTNAME"
 
-set_env SMTP_HOST      "$SMTP_HOST"
-set_env SMTP_PORT      "$SMTP_PORT"
-set_env SMTP_USERNAME  "$SMTP_USERNAME"
-set_env SMTP_PASSWORD  "$SMTP_PASSWORD"
+set_env SMTP_HOST       "$SMTP_HOST"
+set_env SMTP_PORT       "$SMTP_PORT"
+set_env SMTP_USERNAME   "$SMTP_USERNAME"
+set_env SMTP_PASSWORD   "$SMTP_PASSWORD"
 set_env EMAIL_FROM_NAME "$EMAIL_FROM_NAME"
 
-set_env_once DATABASE_PASSWORD "$(gen_password)"
-
-DATABASE_PASSWORD=$(grep "^DATABASE_PASSWORD=" "$ENV_FILE" | cut -d'=' -f2-)
+set_env DATABASE_HOST     "$DATABASE_HOST"
+set_env DATABASE_USER     "$DATABASE_USER"
+set_env DATABASE_PASSWORD "$DATABASE_PASSWORD"
 
 # --------------------------------------------------
 # Sonuçları Göster
@@ -89,7 +98,8 @@ echo "-----------------------------------------------"
 echo "🌐 Hostname      : $MATTERMOST_SERVER_HOSTNAME"
 echo "📧 SMTP Host     : $SMTP_HOST:$SMTP_PORT"
 echo "📧 SMTP Kullanıcı: $SMTP_USERNAME"
-echo "🔑 DB Şifresi    : $DATABASE_PASSWORD"
+echo "🗄️ DB Host       : $DATABASE_HOST"
+echo "👤 DB Password   : $DATABASE_USER"
 echo "-----------------------------------------------"
-echo "⚠️  Şifreyi güvenli bir yerde saklayın!"
+echo "⚠️ Şifreyi güvenli bir yerde saklayın!"
 echo "==============================================="
