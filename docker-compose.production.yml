@@ -34,14 +34,14 @@ services:
 
       # Routers
       - traefik.http.routers.mattermost.rule=Host(`${MATTERMOST_SERVER_HOSTNAME:?required}`)
-      - traefik.http.routers.mattermost.entrypoints=websecure
-      - traefik.http.routers.mattermost.tls.certresolver=le-cloudflare
+      - traefik.http.routers.mattermost.entrypoints=https
+      - traefik.http.routers.mattermost.tls.certresolver=cloudflare
       - traefik.http.routers.mattermost.service=mattermost
 
       # Admin Console Router - restricted by IP
       - traefik.http.routers.mattermost-admin.rule=Host(`${MATTERMOST_SERVER_HOSTNAME:?required}`) && PathPrefix(`/admin_console`)
-      - traefik.http.routers.mattermost-admin.entrypoints=websecure
-      - traefik.http.routers.mattermost-admin.tls.certresolver=le-cloudflare
+      - traefik.http.routers.mattermost-admin.entrypoints=https
+      - traefik.http.routers.mattermost-admin.tls.certresolver=cloudflare
       - traefik.http.routers.mattermost-admin.middlewares=trusted@file
       - traefik.http.routers.mattermost-admin.service=mattermost
 
