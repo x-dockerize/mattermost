@@ -89,6 +89,13 @@ set_env DATABASE_USER     "$DATABASE_USER"
 set_env DATABASE_PASSWORD "$DATABASE_PASSWORD"
 
 # --------------------------------------------------
+# Dizinleri Hazırla
+# --------------------------------------------------
+mkdir -p .docker/mattermost/{data,logs,config,plugins}
+chown -R 2000:2000 .docker/mattermost/
+echo "✅ Mattermost dizinleri hazırlandı (UID/GID: 2000)"
+
+# --------------------------------------------------
 # Sonuçları Göster
 # --------------------------------------------------
 echo
